@@ -1,7 +1,4 @@
 <div align="center">
-
-<img src="public/logo.png" alt="Avenix Logo" width="160" />
-
 # 🚀 Avenix
 
 **A lightweight, type-safe Python tracing library for AI & LLM requests with breathtaking terminal output.**
