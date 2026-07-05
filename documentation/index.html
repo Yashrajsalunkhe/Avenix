@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/png" href="/favicon-32x32.png" sizes="32x32" />
+    <link rel="icon" type="image/png" href="/favicon-16x16.png" sizes="16x16" />
+    <link rel="apple-touch-icon" href="/avenix-logo.png" />
+    <link rel="manifest" href="/manifest.json" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Avenix — AI Tracing Documentation</title>
+    <meta name="description" content="Modern Python tracing library for AI/LLM requests with automatic latency, token usage, and cost tracking." />
+    <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#09090B" />
+    <meta name="theme-color" media="(prefers-color-scheme: light)" content="#FFFFFF" />
+
+    <!-- Apply saved theme early to avoid flash -->
+    <script>
+      (function(){
+        try {
+          var saved = localStorage.getItem('avenix_theme');
+          if (!saved) {
+            var prefersLight = window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches;
+            saved = prefersLight ? 'light' : 'dark';
+          }
+          document.documentElement.setAttribute('data-theme', saved);
+        } catch(e) { /* ignore */ }
+      })();
+    </script>
+
+    <!-- Open Graph -->
+    <meta property="og:title" content="Avenix — AI Tracing Documentation" />
+    <meta property="og:description" content="Modern Python tracing library for AI/LLM requests with automatic latency, token usage, and cost tracking." />
+    <meta property="og:type" content="website" />
+    <meta property="og:image" content="/avenix-logo.png" />
+
+    <!-- Twitter / X -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Avenix — AI Tracing Documentation" />
+    <meta name="twitter:description" content="Modern Python tracing library for AI/LLM requests with automatic latency, token usage, and cost tracking." />
+    <meta name="twitter:image" content="/avenix-logo.png" />
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.jsx"></script>
+  </body>
+</html>
