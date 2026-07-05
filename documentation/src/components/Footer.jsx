@@ -6,7 +6,7 @@ function Footer() {
         <p>Tracing AI and LLM requests with clarity.</p>
       </div>
       <div className="footer-links">
-        <a href="https://github.com/avenix/avenix" target="_blank" rel="noreferrer">
+        <a href="https://github.com/Yashrajsalunkhe/Avenix" target="_blank" rel="noreferrer">
           GitHub
         </a>
         <a href="https://pypi.org/project/avenix/" target="_blank" rel="noreferrer">

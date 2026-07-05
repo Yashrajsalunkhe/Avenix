@@ -15,7 +15,7 @@ function Hero() {
           <Button href="https://pypi.org/project/avenix/" variant="secondary" external>
             View on PyPI
           </Button>
-          <Button href="https://github.com/avenix/avenix" variant="secondary" external>
+          <Button href="https://github.com/Yashrajsalunkhe/Avenix" variant="secondary" external>
             GitHub
           </Button>
         </div>

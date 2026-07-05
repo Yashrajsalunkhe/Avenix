@@ -2,11 +2,12 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { useEffect, useState } from 'react'
 import { Link, NavLink, useLocation } from 'react-router-dom'
 import Button from './Button'
+import logo from '../assets/avenix-logo.png'
 
 const links = [
   { to: '/', label: 'Home' },
   { to: '/docs', label: 'Documentation' },
-  { to: 'https://github.com/avenix/avenix', label: 'GitHub', external: true },
+  { to: 'https://github.com/Yashrajsalunkhe/Avenix', label: 'GitHub', external: true },
 ]
 
 function Navbar() {
@@ -46,9 +47,13 @@ function Navbar() {
         transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
       >
         <Link to="/" className="brand" aria-label="Go to home page">
-          <motion.span className="brand-mark" whileHover={{ rotate: 8, scale: 1.05 }} transition={{ type: 'spring', stiffness: 260, damping: 18 }}>
-            A
-          </motion.span>
+          <motion.img
+            src={logo}
+            alt="Avenix logo"
+            className="brand-mark"
+            whileHover={{ rotate: 8, scale: 1.05 }}
+            transition={{ type: 'spring', stiffness: 260, damping: 18 }}
+          />
           <span className="brand-name">Avenix</span>
         </Link>
 

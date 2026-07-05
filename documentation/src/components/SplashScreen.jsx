@@ -1,6 +1,7 @@
 import { motion, AnimatePresence } from 'framer-motion'
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import logo from '../assets/avenix-logo.png'
 
 function SplashScreen() {
   const [visible, setVisible] = useState(true)
@@ -30,13 +31,13 @@ function SplashScreen() {
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
           >
-            <motion.span
+            <motion.img
+              src={logo}
+              alt="Avenix logo"
               className="splash-mark"
               animate={{ boxShadow: ['0 0 0 rgba(34,211,238,0)', '0 0 28px rgba(34,211,238,0.45)', '0 0 0 rgba(34,211,238,0)'] }}
               transition={{ duration: 1.6, repeat: Infinity, repeatType: 'mirror' }}
-            >
-              A
-            </motion.span>
+            />
             <span className="splash-name">Avenix</span>
           </motion.div>
         </motion.div>
