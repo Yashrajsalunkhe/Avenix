@@ -253,6 +253,7 @@
 
 .hero-copy {
   max-width: 660px;
+  color: var(--text-secondary);
 }
 
 .eyebrow {
@@ -270,9 +271,10 @@
   letter-spacing: -0.04em;
   margin-bottom: 16px;
   font-weight: 800;
-  background: linear-gradient(90deg, #ffffff, #dbeafe);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
+  color: var(--text-primary);
+  background: none;
+  -webkit-background-clip: unset;
+  -webkit-text-fill-color: unset;
 }
 
 .hero-text,
