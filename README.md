@@ -91,76 +91,63 @@ Here is what you see in your terminal when an Avenix-traced function executes:
 ## 🏗️ Architecture & Workflows
 
 Avenix is built from the ground up using modern software engineering best practices, emphasizing clean separation of concerns, strict typing, and fault tolerance.
-
 ### 1. Tracing Data Flow Lifecycle
 
 The following diagram illustrates the lifecycle of a request passing through an Avenix-traced function:
 
 ```mermaid
-flowchart TD
-    %% Styling Definitions
-    classDef userCode fill:#2563eb,stroke:#1e3a8a,stroke-width:2px,color:#ffffff
-    classDef avenixCore fill:#7c3aed,stroke:#4c1d95,stroke-width:2px,color:#ffffff
-    classDef provider fill:#059669,stroke:#064e3b,stroke-width:2px,color:#ffffff
-    classDef terminal fill:#1f2937,stroke:#374151,stroke-width:2px,color:#f9fafb
+flowchart LR
+    A[User Function Call] -->|Wrapped by @trace| B[Avenix Decorator]
+    B -->|Start timer via perf_counter()| C[AI Provider Request]
+    C -->|Response returned| D[Capture latency + raw result]
+    D --> E[Extractor Engine]
+    E -->|Parse OpenAI / Anthropic payload| F[Extract tokens, prompt, response]
+    F --> G[Calculate cost (USD)]
+    G --> H[Validate TraceModel]
+    H --> I[Render Rich panel]
+    I --> J[Terminal console display]
+    J --> K[Return original response]
 
-    A["User Function Call"] --->|"Wrapped with @trace"| B["Avenix Decorator"]
-    
-    subgraph Execution["1. Execution Phase"]
-        B --->|"Start time.perf_counter()"| C["Call AI Model API"]
-        C --->|"Return Response & Stop Timer"| D["Capture Latency & Result"]
-    end
-    
-    subgraph Extraction["2. Extraction & Analysis Phase"]
-        D ---> E["Response Extractor Engine"]
-        E --->|"OpenAI / Anthropic Format"| F["Extract Tokens & Content"]
-        F ---> G["Calculate Request Cost (USD)"]
-        G ---> H["Pydantic TraceModel Validation"]
-    end
-    
-    subgraph Presentation["3. Presentation Phase"]
-        H --->|"Validated Trace Object"| I["Rich Renderer Formatter"]
-        I --->|"Stylized Panel Box"| J["Terminal Console Display"]
-    end
-    
-    class A userCode;
-    class B,D,E,F,G,H,I avenixCore;
+    classDef user fill:#2563eb,stroke:#1e3a8a,stroke-width:2px,color:#ffffff;
+    classDef core fill:#7c3aed,stroke:#4c1d95,stroke-width:2px,color:#ffffff;
+    classDef provider fill:#059669,stroke:#064e3b,stroke-width:2px,color:#ffffff;
+    classDef output fill:#1f2937,stroke:#374151,stroke-width:2px,color:#f9fafb;
+
+    class A user;
+    class B,D,E,F,G,H,I core;
     class C provider;
-    class J terminal;
+    class J,K output;
 ```
 
 ### 2. Runtime Interaction Sequence
 
-When an application invokes a traced function, Avenix orchestrates timing, extraction, and rendering asynchronously while preserving the original return payload:
+When an application invokes a traced function, Avenix orchestrates timing, extraction, and rendering while preserving the original return payload:
 
 ```mermaid
 sequenceDiagram
     autonumber
     actor User as User Application
-    participant Dec as @trace Decorator
-    participant API as AI Provider (OpenAI / Anthropic)
-    participant Core as Avenix Tracer Engine
-    participant Term as Terminal Console
+    participant Decorator as @trace Decorator
+    participant Provider as AI Provider
+    participant Tracer as Avenix Tracer
+    participant Terminal as Terminal Console
 
-    User->>Dec: Invoke Traced Function(prompt)
-    activate Dec
-    Dec->>Dec: Start Timer (perf_counter)
-    Dec->>API: Send API Request (Chat / Messages)
-    activate API
-    API-->>Dec: Return API Response (Tokens, Content, Usage)
-    deactivate API
-    Dec->>Dec: Stop Timer & Compute Latency
-    
-    Dec->>Core: capture_trace(result, latency, func_name)
-    activate Core
-    Core->>Core: Match Extractor Chain (OpenAI / Anthropic)
-    Core->>Core: Compute USD Cost via Pricing Matrix
-    Core->>Core: Validate Data via Pydantic v2 TraceModel
-    Core->>Term: Render Formatted Rich Panel
-    deactivate Core
-    
-    Dec-->>User: Return Original API Response Unchanged
-    deactivate Dec
+    User->>Decorator: Invoke traced function(prompt)
+    activate Decorator
+    Decorator->>Decorator: Start timer (perf_counter)
+    Decorator->>Provider: Send AI request
+    activate Provider
+    Provider-->>Decorator: Return API response
+    deactivate Provider
+    Decorator->>Decorator: Stop timer
+    Decorator->>Tracer: capture_trace(result, latency, func_name)
+    activate Tracer
+    Tracer->>Tracer: Select extractor / parse response
+    Tracer->>Tracer: Compute cost and validate trace
+    Tracer->>Terminal: Render Rich panel
+    deactivate Tracer
+    Decorator-->>User: Return original response
+    deactivate Decorator
 ```
 
 ### 3. Layered Component Architecture
@@ -169,47 +156,43 @@ Avenix enforces a strict 6-layer modular architecture to guarantee extensibility
 
 ```mermaid
 flowchart TB
-    subgraph UserLayer["1. User Application Layer"]
-        U1["@trace Decorator"] 
-        U2["Manual Tracer API"]
+    subgraph UserLayer[User Application Layer]
+        U1[@trace Decorator]
+        U2[Manual Tracer API]
     end
 
-    subgraph OrchestrationLayer["2. Tracer Orchestration Layer"]
-        T1["Tracer Class (Core Engine)"]
+    subgraph CoreLayer[Tracer Orchestration Layer]
+        T[Tracer Engine]
     end
 
-    subgraph ExtractionLayer["3. Extraction Layer"]
-        E1["ResponseExtractor (ABC)"]
-        E2["OpenAIExtractor"]
-        E3["AnthropicExtractor"]
+    subgraph ExtractionLayer[Extraction Layer]
+        E1[ResponseExtractor (ABC)]
+        E2[OpenAIExtractor]
+        E3[AnthropicExtractor]
         E1 --> E2
         E1 --> E3
     end
 
-    subgraph DataLayer["4. Data & Validation Layer"]
-        M1["TraceModel (Pydantic v2)"]
-        M2["Model Pricing Matrix"]
+    subgraph DataLayer[Data & Validation Layer]
+        M1[TraceModel (Pydantic v2)]
+        M2[Pricing Matrix]
     end
 
-    subgraph FormattingLayer["5. Formatting Layer"]
-        F1["RichFormatter (Panel & Text Builder)"]
+    subgraph FormattingLayer[Formatting Layer]
+        F[RichFormatter]
     end
 
-    subgraph LoggingLayer["6. Output & Logging Layer"]
-        L1["RichLogger / Terminal Console"]
+    subgraph LoggingLayer[Output & Logging Layer]
+        L[RichLogger / Terminal Console]
     end
 
-    U1 --> T1
-    U2 --> T1
-    T1 --> E1
-    T1 --> M1
-    T1 --> M2
-    T1 --> F1
-    F1 --> L1
-
-    classDef layerStyle fill:#0f172a,stroke:#334155,stroke-width:1px,color:#e2e8f0;
-    classDef nodeStyle fill:#1e293b,stroke:#475569,stroke-width:1.5px,color:#38bdf8;
-    class U1,U2,T1,E1,E2,E3,M1,M2,F1,L1 nodeStyle;
+    U1 --> T
+    U2 --> T
+    T --> E1
+    T --> M1
+    T --> M2
+    T --> F
+    F --> L
 ```
 
 ---
