@@ -97,16 +97,16 @@ The following diagram illustrates the lifecycle of a request passing through an 
 
 ```mermaid
 flowchart LR
-    A[User Function Call] -->|Wrapped by @trace| B[Avenix Decorator]
-    B -->|Start timer via perf_counter()| C[AI Provider Request]
-    C -->|Response returned| D[Capture latency + raw result]
-    D --> E[Extractor Engine]
-    E -->|Parse OpenAI / Anthropic payload| F[Extract tokens, prompt, response]
-    F --> G[Calculate cost (USD)]
-    G --> H[Validate TraceModel]
-    H --> I[Render Rich panel]
-    I --> J[Terminal console display]
-    J --> K[Return original response]
+    A["User Function Call"] -->|"Wrapped by @trace"| B["Avenix Decorator"]
+    B -->|"Start timer via perf_counter()"| C["AI Provider Request"]
+    C -->|"Response returned"| D["Capture latency + raw result"]
+    D --> E["Extractor Engine"]
+    E -->|"Parse OpenAI / Anthropic payload"| F["Extract tokens, prompt, response"]
+    F --> G["Calculate cost (USD)"]
+    G --> H["Validate TraceModel"]
+    H --> I["Render Rich panel"]
+    I --> J["Terminal console display"]
+    J --> K["Return original response"]
 
     classDef user fill:#2563eb,stroke:#1e3a8a,stroke-width:2px,color:#ffffff;
     classDef core fill:#7c3aed,stroke:#4c1d95,stroke-width:2px,color:#ffffff;
@@ -157,33 +157,33 @@ Avenix enforces a strict 6-layer modular architecture to guarantee extensibility
 ```mermaid
 flowchart TB
     subgraph UserLayer[User Application Layer]
-        U1[@trace Decorator]
-        U2[Manual Tracer API]
+        U1["@trace Decorator"]
+        U2["Manual Tracer API"]
     end
 
     subgraph CoreLayer[Tracer Orchestration Layer]
-        T[Tracer Engine]
+        T["Tracer Engine"]
     end
 
     subgraph ExtractionLayer[Extraction Layer]
-        E1[ResponseExtractor (ABC)]
-        E2[OpenAIExtractor]
-        E3[AnthropicExtractor]
+        E1["ResponseExtractor (ABC)"]
+        E2["OpenAIExtractor"]
+        E3["AnthropicExtractor"]
         E1 --> E2
         E1 --> E3
     end
 
     subgraph DataLayer[Data & Validation Layer]
-        M1[TraceModel (Pydantic v2)]
-        M2[Pricing Matrix]
+        M1["TraceModel (Pydantic v2)"]
+        M2["Pricing Matrix"]
     end
 
     subgraph FormattingLayer[Formatting Layer]
-        F[RichFormatter]
+        F["RichFormatter"]
     end
 
     subgraph LoggingLayer[Output & Logging Layer]
-        L[RichLogger / Terminal Console]
+        L["RichLogger / Terminal Console"]
     end
 
     U1 --> T
